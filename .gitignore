@@ -1,0 +1,21 @@
+# build outputs
+build*/
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+CTestTestfile.cmake
+Testing/
+*.cmake
+CMakeUserPresets.json
+
+# conan
+.conan/
+.conan2/
+
+# macOS
+.DS_Store
+
+# editors
+.vscode/
+.idea/
