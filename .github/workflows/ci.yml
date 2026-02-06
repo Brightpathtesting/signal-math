@@ -1,5 +1,7 @@
 name: ci
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
   build-test:
@@ -7,8 +9,16 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Conan
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-${{ runner.os }}-${{ matrix.build_type }}-${{ hashFiles('conanfile.*') }}
 
       - name: Install dependencies
         run: |
@@ -19,12 +29,6 @@ jobs:
 
       - name: Conan profile
         run: conan profile detect --force
-        - name: Cache Conan
-        uses: actions/cache@v4
-        with:
-          path: ~/.conan2
-          key: conan-${{ runner.os }}-${{ matrix.build_type }}-${{ hashFiles('conanfile.*') }}
-
 
       - name: Conan install
         run: conan install . -s build_type=${{ matrix.build_type }} -of build/${{ matrix.build_type }} --build=missing
